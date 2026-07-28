@@ -89,8 +89,54 @@ st.header("Summary Statistics")
 st.write(filtered_df.describe())
 
 # ------------------------------------
-# PLACEHOLDER:
-# Paste your Pareto Chart code here
+# ------------------------------------
+# Pareto Chart
+# ------------------------------------
+st.header("Pareto Chart of Workers by Education Level")
+
+# Create Pareto data from the filtered dataset
+pareto = (
+    filtered_df["EDUC_GROUP"]
+    .value_counts()
+    .sort_values(ascending=False)
+)
+
+# Calculate cumulative percentage
+cum_percent = pareto.cumsum() / pareto.sum() * 100
+
+# Create the figure
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# Bar chart
+pareto.plot(
+    kind="bar",
+    ax=ax1,
+    color="steelblue"
+)
+
+ax1.set_ylabel("Number of Workers")
+ax1.set_xlabel("Education Group")
+ax1.set_title("Pareto Chart of Workers by Education Level")
+
+# Cumulative percentage line
+ax2 = ax1.twinx()
+
+ax2.plot(
+    range(len(cum_percent)),
+    cum_percent.values,
+    color="red",
+    marker="o",
+    linewidth=2
+)
+
+ax2.set_ylabel("Cumulative Percentage (%)")
+ax2.set_ylim(0, 110)
+
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Display in Streamlit
+st.pyplot(fig)
 # ------------------------------------
 
 # fig, ax = plt.subplots(...)
